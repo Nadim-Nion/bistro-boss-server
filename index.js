@@ -29,10 +29,18 @@ async function run() {
 
         const database = client.db('bistroDB');
         const menuCollection = database.collection('menus');
+        const reviewCollection = database.collection('reviews');
 
         // Get all menus data
         app.get('/menus', async (req, res) => {
             const cursor = menuCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // Get all reviews data
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
