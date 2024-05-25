@@ -46,10 +46,19 @@ async function run() {
             res.send(result);
         })
 
-        // insert a new food item to the cart collection
+        // Insert a new food item to the cart collection
         app.post('/carts', async (req, res) => {
             const cartItem = req.body;
             const result = await cartCollection.insertOne(cartItem);
+            res.send(result);
+        })
+
+        // Get all cart data from cart collection by user email
+        app.get('/carts', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = cartCollection.find(query);
+            const result = await cursor.toArray();
             res.send(result);
         })
 
