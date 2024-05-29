@@ -31,6 +31,7 @@ async function run() {
         const menuCollection = database.collection('menus');
         const reviewCollection = database.collection('reviews');
         const cartCollection = database.collection('carts');
+        const userCollection = database.collection('users');
 
         // Get all menus data
         app.get('/menus', async (req, res) => {
@@ -67,6 +68,13 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await cartCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // save (POST API) the user information to the DB
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
             res.send(result);
         })
 
