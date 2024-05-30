@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
@@ -22,6 +23,16 @@ const client = new MongoClient(uri, {
     }
 });
 
+// Custom Middlewares
+const verifyToken = (req, res, next) => {
+    console.log('inside verifyToken', req.headers);
+    if (!req.headers.authorization) {
+        return res.status(401).send({ message: 'unauthorized access' });
+    }
+    const token = req.headers.authorization.split(' ')[1];
+    // next();
+}
+
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -32,6 +43,13 @@ async function run() {
         const reviewCollection = database.collection('reviews');
         const cartCollection = database.collection('carts');
         const userCollection = database.collection('users');
+
+        // JWT related api
+        app.post('/jwt', async (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+            res.send({ token });
+        })
 
         // Get all menus data
         app.get('/menus', async (req, res) => {
@@ -87,7 +105,7 @@ async function run() {
         })
 
         // Get all the user information from DB
-        app.get('/users', async (req, res) => {
+        app.get('/users', verifyToken, async (req, res) => {
             const cursor = userCollection.find();
             const result = await cursor.toArray();
             res.send(result);
