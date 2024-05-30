@@ -57,6 +57,10 @@ async function run() {
             res.send({ token });
         })
 
+        /*------------------------------ 
+            Menu Collection API
+        -------------------------------*/
+
         // Get all menus data
         app.get('/menus', async (req, res) => {
             const cursor = menuCollection.find();
@@ -64,12 +68,20 @@ async function run() {
             res.send(result);
         })
 
+        /*----------------------------- 
+            Review Collection API
+        -------------------------------*/
+
         // Get all reviews data
         app.get('/reviews', async (req, res) => {
             const cursor = reviewCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
+
+        /*----------------------------
+            Cart Collection API
+        -------------------------------*/
 
         // Insert a new food item to the cart collection
         app.post('/carts', async (req, res) => {
@@ -94,6 +106,10 @@ async function run() {
             const result = await cartCollection.deleteOne(query);
             res.send(result);
         })
+
+        /*-------------------------- 
+            User Collection API
+        -----------------------------*/
 
         // save (POST API) the user information to the DB
         app.post('/users', async (req, res) => {
@@ -136,6 +152,21 @@ async function run() {
             }
             const result = await userCollection.updateOne(filter, updatedDoc);
             res.send(result);
+        })
+
+        // Check the user is admin or not
+        app.get('/users/admin/:email', verifyToken, async (req, res) => {
+            const email = req.params.email;
+            if (email !== req.decoded.email) {
+                return res.status(403).send({ message: 'forbidden access' });
+            }
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            let admin = false;
+            if (user) {
+                admin = user?.role === 'admin';
+            }
+            res.send({ admin });
         })
 
 
