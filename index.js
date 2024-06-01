@@ -81,6 +81,13 @@ async function run() {
             res.send(result);
         })
 
+        // Create or add a new menu in the menu collection
+        app.post('/menus', verifyToken, verifyAdmin, async (req, res) => {
+            const menu = req.body;
+            const result = await menuCollection.insertOne(menu);
+            res.send(result);
+        })
+
         /*----------------------------- 
             Review Collection API
         -------------------------------*/
