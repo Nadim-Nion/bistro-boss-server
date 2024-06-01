@@ -37,7 +37,7 @@ async function run() {
 
         // Custom Middlewares
         const verifyToken = (req, res, next) => {
-            console.log('inside verify token:', req.headers.authorization);
+            // console.log('inside verify token:', req.headers.authorization);
             if (!req.headers.authorization) {
                 return res.status(401).send({ message: 'unauthorized access' });
             }
@@ -85,6 +85,14 @@ async function run() {
         app.post('/menus', verifyToken, verifyAdmin, async (req, res) => {
             const menu = req.body;
             const result = await menuCollection.insertOne(menu);
+            res.send(result);
+        })
+
+        // Delete a specific menu item by its id
+        app.delete('/menus/:id', verifyToken, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await menuCollection.deleteOne(query);
             res.send(result);
         })
 
