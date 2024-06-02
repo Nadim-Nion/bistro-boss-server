@@ -81,10 +81,37 @@ async function run() {
             res.send(result);
         })
 
+        // Get specific menu data by its id
+        app.get('/menus/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: id };
+            const result = await menuCollection.findOne(query);
+            res.send(result);
+        })
+
         // Create or add a new menu in the menu collection
         app.post('/menus', verifyToken, verifyAdmin, async (req, res) => {
             const menu = req.body;
             const result = await menuCollection.insertOne(menu);
+            res.send(result);
+        })
+
+        // Patch (Change) some fields of any document by its id
+        app.patch('/menus/:id', async (req, res) => {
+            const id = req.params.id;
+            const menu = req.body;
+            // console.log(menu);
+            const filter = { _id: id };
+            const updatedMenu = {
+                $set: {
+                    name: menu.name,
+                    category: menu.category,
+                    price: menu.price,
+                    recipe: menu.recipe,
+                    image: menu.image
+                }
+            }
+            const result = await menuCollection.updateOne(filter, updatedMenu);
             res.send(result);
         })
 
