@@ -35,6 +35,7 @@ async function run() {
         const reviewCollection = database.collection('reviews');
         const cartCollection = database.collection('carts');
         const userCollection = database.collection('users');
+        const paymentCollection = database.collection('payments');
 
         // Custom Middlewares
         const verifyToken = (req, res, next) => {
@@ -239,6 +240,22 @@ async function run() {
             res.send({
                 clientSecret: paymentIntent.client_secret
             })
+        })
+
+        // Payment related API
+        app.post('/payments', async (req, res) => {
+            const payment = req.body;
+            const paymentResult = await paymentCollection.insertOne(payment);
+
+            // Carefully delete each item fom the cart
+            console.log('payment info', payment);
+            const query = {
+                _id: {
+                    $in: payment.cartIds.map(id => new ObjectId(id))
+                }
+            };
+            const deleteResult = await cartCollection.deleteMany(query);
+            res.send({ paymentResult, deleteResult });
         })
 
 
