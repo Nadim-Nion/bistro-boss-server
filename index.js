@@ -242,7 +242,23 @@ async function run() {
             })
         })
 
-        // Payment related API
+        /*------------------------------------ 
+            Payment Collection API
+        ---------------------------------------*/
+
+        // Get the specific payment info by user's email
+        app.get('/payments/:email', verifyToken, async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            if (email !== req.decoded.email) {
+                return res.status(403).send({ message: 'forbidden access' });
+            }
+            const cursor = paymentCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // Payment related API (Post or create new payment info to DB)
         app.post('/payments', async (req, res) => {
             const payment = req.body;
             const paymentResult = await paymentCollection.insertOne(payment);
