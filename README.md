@@ -94,13 +94,11 @@ Welcome to the Bistro Boss Restaurant server-side repository! This project provi
 - **Get Order Stats**: Retrieves order statistics using an aggregate pipeline.
 
 This comprehensive setup ensures a seamless experience for both users and administrators, offering robust features and secure interactions.
-## Live Website
 
-* Firebase: https://bistro-boss-client-8d542.web.app/
+## Backend API / Data Deployment
 
-* Netlify: https://bistro-boss-client-nion.netlify.app/
+* Vercel: https://bistro-boss-server-iota-virid.vercel.app/ 
 
-* Surge: https://waiting-lettuce.surge.sh/
 ## Getting Startted
 
 ### Prerequisites
