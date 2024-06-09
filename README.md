@@ -1,5 +1,7 @@
 # Bistro Boss Restaurant (Server Side)
 
+Welcome to the Bistro Boss Restaurant server-side repository! This project provides the backend services for the Bistro Boss Restaurant web application, which is built using various modern technologies to ensure a seamless and secure experience for both users and administrators.
+
 ## Technologies Used
 
 ### Client Side:
